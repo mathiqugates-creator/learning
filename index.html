@@ -1,186 +1,286 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Quote Generator</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+<title>QuoteVerse</title>
 
-        body{
-            min-height:100vh;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            background:linear-gradient(135deg,#667eea,#764ba2);
-            overflow:hidden;
-        }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-        .background{
-            position:absolute;
-            width:100%;
-            height:100%;
-            z-index:-1;
-        }
+<style>
+:root{
+    --glass: rgba(255,255,255,0.08);
+    --border: rgba(255,255,255,0.15);
+    --text: #ffffff;
+    --muted: rgba(255,255,255,0.7);
+}
 
-        .circle{
-            position:absolute;
-            border-radius:50%;
-            background:rgba(255,255,255,0.1);
-            backdrop-filter:blur(5px);
-        }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
 
-        .circle:nth-child(1){
-            width:300px;
-            height:300px;
-            top:-100px;
-            left:-100px;
-        }
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    background:#0f172a;
+}
 
-        .circle:nth-child(2){
-            width:250px;
-            height:250px;
-            bottom:-80px;
-            right:-80px;
-        }
+/* Animated Background */
+body::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:
+        linear-gradient(-45deg,
+        #0ea5e9,
+        #8b5cf6,
+        #ec4899,
+        #06b6d4);
+    background-size:400% 400%;
+    animation:gradient 15s ease infinite;
+}
 
-        .quote-card{
-            width:90%;
-            max-width:800px;
-            padding:40px;
-            border-radius:25px;
-            background:rgba(255,255,255,0.15);
-            backdrop-filter:blur(20px);
-            border:1px solid rgba(255,255,255,0.2);
-            box-shadow:0 15px 35px rgba(0,0,0,0.2);
-            text-align:center;
-            color:white;
-            animation:fadeIn 1s ease;
-        }
+@keyframes gradient{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
 
-        .quote-icon{
-            font-size:60px;
-            opacity:0.4;
-        }
+/* Floating Blobs */
+.blob{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(100px);
+    opacity:.45;
+}
 
-        .quote-text{
-            font-size:1.8rem;
-            line-height:1.6;
-            margin:20px 0;
-            font-weight:500;
-        }
+.blob1{
+    width:350px;
+    height:350px;
+    background:#8b5cf6;
+    top:-100px;
+    left:-80px;
+}
 
-        .author{
-            font-size:1.2rem;
-            color:#f8f9fa;
-            font-weight:bold;
-            margin-top:15px;
-        }
+.blob2{
+    width:350px;
+    height:350px;
+    background:#06b6d4;
+    bottom:-120px;
+    right:-80px;
+}
 
-        .quote-id{
-            margin-top:10px;
-            opacity:0.8;
-            font-size:0.9rem;
-        }
+.container{
+    width:90%;
+    max-width:900px;
+    position:relative;
+    z-index:2;
+}
 
-        button{
-            margin-top:30px;
-            padding:14px 35px;
-            border:none;
-            border-radius:50px;
-            background:white;
-            color:#764ba2;
-            font-size:16px;
-            font-weight:600;
-            cursor:pointer;
-            transition:0.3s;
-        }
+.card{
+    backdrop-filter:blur(25px);
+    background:var(--glass);
+    border:1px solid var(--border);
+    border-radius:30px;
+    padding:50px;
+    box-shadow:
+        0 20px 50px rgba(0,0,0,.4),
+        inset 0 1px 1px rgba(255,255,255,.15);
+}
 
-        button:hover{
-            transform:translateY(-3px);
-            box-shadow:0 10px 20px rgba(0,0,0,0.2);
-        }
+.logo{
+    text-align:center;
+    color:white;
+    font-size:14px;
+    letter-spacing:4px;
+    text-transform:uppercase;
+    opacity:.7;
+}
 
-        .loading{
-            font-size:18px;
-            color:white;
-        }
+.quote-icon{
+    text-align:center;
+    font-size:90px;
+    color:white;
+    opacity:.2;
+    line-height:1;
+}
 
-        @keyframes fadeIn{
-            from{
-                opacity:0;
-                transform:translateY(20px);
-            }
-            to{
-                opacity:1;
-                transform:translateY(0);
-            }
-        }
-    </style>
+.quote{
+    margin-top:10px;
+    color:var(--text);
+    font-size:2rem;
+    text-align:center;
+    line-height:1.6;
+    font-weight:500;
+}
+
+.author{
+    text-align:center;
+    margin-top:30px;
+    font-size:1.2rem;
+    color:white;
+    font-weight:600;
+}
+
+.id{
+    text-align:center;
+    color:var(--muted);
+    margin-top:8px;
+}
+
+.actions{
+    display:flex;
+    justify-content:center;
+    margin-top:40px;
+}
+
+button{
+    border:none;
+    padding:16px 35px;
+    border-radius:60px;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:600;
+    color:white;
+    background:linear-gradient(
+        135deg,
+        #8b5cf6,
+        #06b6d4
+    );
+    transition:.3s;
+}
+
+button:hover{
+    transform:translateY(-4px) scale(1.03);
+    box-shadow:
+        0 15px 30px rgba(0,0,0,.3);
+}
+
+.loader{
+    display:inline-block;
+    width:22px;
+    height:22px;
+    border:3px solid rgba(255,255,255,.3);
+    border-top:3px solid white;
+    border-radius:50%;
+    animation:spin .8s linear infinite;
+}
+
+@keyframes spin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+.fade{
+    animation:fade .6s ease;
+}
+
+@keyframes fade{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+@media(max-width:768px){
+
+    .card{
+        padding:30px;
+    }
+
+    .quote{
+        font-size:1.4rem;
+    }
+}
+</style>
 </head>
+
 <body>
 
-    <div class="background">
-        <div class="circle"></div>
-        <div class="circle"></div>
-    </div>
+<div class="blob blob1"></div>
+<div class="blob blob2"></div>
 
-    <div class="quote-card">
-        <div class="quote-icon">❝</div>
+<div class="container">
 
-        <div id="quoteText" class="quote-text">
-            Loading quote...
+    <div class="card">
+
+        <div class="logo">
+            QUOTEVERSE
+        </div>
+
+        <div class="quote-icon">
+            ❝
+        </div>
+
+        <div id="quoteText" class="quote fade">
+            Loading...
         </div>
 
         <div id="author" class="author"></div>
 
-        <div id="quoteId" class="quote-id"></div>
+        <div id="quoteId" class="id"></div>
 
-        <button onclick="loadQuote()">
-            Get New Quote
-        </button>
+        <div class="actions">
+            <button onclick="loadQuote()">
+                ✨ New Inspiration
+            </button>
+        </div>
+
     </div>
 
-    <script>
-        async function loadQuote() {
-            const quoteText = document.getElementById('quoteText');
-            const author = document.getElementById('author');
-            const quoteId = document.getElementById('quoteId');
+</div>
 
-            quoteText.innerHTML = "Loading...";
-            author.innerHTML = "";
-            quoteId.innerHTML = "";
+<script>
 
-            try {
-                const response = await fetch(
-                    '/api/quotes/random'
-                );
+async function loadQuote(){
 
-                if (!response.ok) {
-                    throw new Error("API Error");
-                }
+    const quote=document.getElementById('quoteText');
+    const author=document.getElementById('author');
+    const id=document.getElementById('quoteId');
 
-                const data = await response.json();
+    quote.innerHTML='<span class="loader"></span>';
+    author.innerHTML='';
+    id.innerHTML='';
 
-                quoteText.innerHTML = `"${data.text}"`;
-                author.innerHTML = `— ${data.author}`;
-                quoteId.innerHTML = `Quote ID: ${data.id}`;
+    try{
 
-            } catch (error) {
-                quoteText.innerHTML =
-                    "Unable to load quote. Please check the API.";
-                console.error(error);
-            }
-        }
+        const response=await fetch('/api/quotes/random');
 
-        loadQuote();
-    </script>
+        const data=await response.json();
+
+        quote.classList.remove('fade');
+        void quote.offsetWidth;
+        quote.classList.add('fade');
+
+        quote.innerHTML=`"${data.text}"`;
+        author.innerHTML=`— ${data.author}`;
+        id.innerHTML=`Quote #${data.id}`;
+
+    }catch(err){
+
+        quote.innerHTML='Unable to fetch quote.';
+        author.innerHTML='Please verify the API.';
+    }
+}
+
+loadQuote();
+
+</script>
 
 </body>
 </html>
+
