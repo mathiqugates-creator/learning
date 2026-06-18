@@ -15,4 +15,4 @@ jobs:
 
       - name: Deploy Website
         run: |
-          sudo cp index.html /var/www/html/
+          cp index.html /var/www/html/
